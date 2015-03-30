@@ -5,6 +5,7 @@ import etcd
 import sys
 from urlparse import urlparse
 
+virtual_host = "{{ .Env.VIRTUAL_HOST }}"
 etcd_host = "{{ .Env.ETCD_HOST }}"
 if not etcd_host:
     print "ETCD_HOST not set"
@@ -34,6 +35,9 @@ except KeyError:
 
 client.write("/backends/{{ $value.Image.Repository}}/{{printf "%.*s" 12 $value.ID}}", "{{ $local.Env.HOST_IP }}:{{ $address.HostPort }}", ttl=15)
 client.write("/backends/{{ $value.Image.Repository}}/port", "{{ $address.Port }}", ttl=15)
+client.write("/backends/{{ $value.Image.Repository}}/virtualhost", "{{ $local.Env.VIRTUAL_HOST }}", ttl=15)
+
+
 
 {{ end }}
 {{ end }}
